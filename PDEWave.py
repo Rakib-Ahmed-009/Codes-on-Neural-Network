@@ -18,7 +18,7 @@ def h1(point):
 
 def g_trial(point,P):
     x,t = point
-    return h1(point) + x*(1-x)*t**2*deep_neural_network(P,point)
+    return h1(point) + x*(1-x)*t**2*nn(P,point)
 
 
 def cost_function(P, x, t):
@@ -44,7 +44,7 @@ def cost_function(P, x, t):
 def sigmoid(z):
     return 1/(1 + np.exp(-z))
 
-def deep_neural_network(deep_params, x):
+def nn(deep_params, x):
     
     num_coordinates = np.size(x,0)
     x = x.reshape(num_coordinates,-1)
@@ -89,7 +89,7 @@ def g_analytic(point):
     x,t = point
     return np.sin(np.pi*x)*np.cos(np.pi*t) - np.sin(np.pi*x)*np.sin(np.pi*t)
 
-def solve_pde_deep_neural_network(x,t, num_neurons, num_iter, lmb):
+def solve_pde(x,t, num_neurons, num_iter, lmb):
     
     N_hidden = np.size(num_neurons)
 
@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
     
     Nx = 10; Nt = 10
-    x = np.linspace(0, 1, Nx)
+    x = np.linspace(0,1, Nx)
     t = np.linspace(0,1,Nt)
 
     
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     num_iter = 200
     lmb = 0.01
 
-    P = solve_pde_deep_neural_network(x,t, num_hidden_neurons, num_iter, lmb)
+    P = solve_pde(x,t, num_hidden_neurons, num_iter, lmb)
 
     
     res = np.zeros((Nx, Nt))
@@ -145,7 +145,7 @@ if __name__ == '__main__':
             res_analytical[i,j] = g_analytic(point)
 
     diff = np.abs(res - res_analytical)
-    print("Max difference between analytical and solution from nn: %g"%np.max(diff))
+    
 
     
 
@@ -181,18 +181,17 @@ if __name__ == '__main__':
 
     t1 = t[indx1]
     t2 = t[indx2]
-    t3 = t[indx3]
 
     res1 = res[:,indx1]
     res2 = res[:,indx2]
-    res3 = res[:,indx3]
 
     
     res_analytical1 = res_analytical[:,indx1]
     res_analytical2 = res_analytical[:,indx2]
-    res_analytical3 = res_analytical[:,indx3]
 
     
+    
+
     plt.figure(figsize=(10,10))
     plt.title("Computed solutions at time = %g"%t1)
     plt.plot(x, res1)
@@ -204,13 +203,6 @@ if __name__ == '__main__':
     plt.title("Computed solutions at time = %g"%t2)
     plt.plot(x, res2)
     plt.plot(x,res_analytical2)
-    plt.legend(['nn','analytic'])
-    
-
-    plt.figure(figsize=(10,10))
-    plt.title("Computed solutions at time = %g"%t3)
-    plt.plot(x, res3)
-    plt.plot(x,res_analytical3)
     plt.legend(['nn','analytic'])
 
 
