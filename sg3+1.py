@@ -94,14 +94,16 @@ for i, x in enumerate(x_space):
     for j, y in enumerate(y_space):
         for s, z in enumerate(z_space):
             for d, t in enumerate(t_space):
-                res_analytic[i][:] = analytic_solution([x, y, z, t])
+                for m=0:ny*nz*nt:
+                    res_analytic[i][m] = analytic_solution([x, y, z, t])
         
 for i, x in enumerate(x_space):
     for j, y in enumerate(y_space):
         for s, z in enumerate(z_space):
             for d, t in enumerate(t_space):
-    	        net_outt = neural_network(W, [x, y, z, t])[0]
-    	        res[i][:] = psy_trial([x, y, z, t], net_outt)
+                for m=0:ny*nz*nt:
+    	            net_outt = neural_network(W, [x, y, z, t])[0]
+    	            res[i][m] = psy_trial([x, y, z, t], net_outt)
 
 
 print (res)
